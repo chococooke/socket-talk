@@ -13,14 +13,24 @@ socket.on("receive-message", (msg) => {
 });
 
 async function sendMessage() {
+  const token = localStorage.getItem("token");
   const input = document.getElementById("messageInput");
   const text = input.value.trim();
   if (!text) return;
 
-  await axios.post(`${baseURL}/groups/${groupId}/messages`, {
-    text,
-    userId,
-  });
+  await axios.post(
+    `${baseURL}/groups/${groupId}/messages`,
+    {
+      text,
+      userId,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   socket.emit("send-message", { groupId, message: { text, userId } });
   input.value = "";

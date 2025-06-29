@@ -1,7 +1,8 @@
 const { Group, Message, User, UserGroup } = require("../models");
 
 module.exports.createGroup = async (req, res) => {
-  const { name, userId } = req.body;
+  const userId = req.user.id;
+  const { name } = req.body;
 
   try {
     const group = await Group.create({
@@ -48,7 +49,7 @@ module.exports.addMembers = async (req, res) => {
 };
 
 module.exports.getUserGroups = async (req, res) => {
-  const userId = parseInt(req.query.userId);
+  const userId = req.user.id;
 
   try {
     const groups = await Group.findAll({

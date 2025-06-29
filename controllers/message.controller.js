@@ -2,7 +2,8 @@ const { Message, User } = require("../models");
 
 module.exports.sendMessage = async (req, res) => {
   const groupId = parseInt(req.params.id);
-  const { text, userId } = req.body;
+  const userId = req.user.id;
+  const { text } = req.body;
 
   try {
     const message = await Message.create({
@@ -34,7 +35,7 @@ module.exports.getMessages = async (req, res) => {
 
     res.status(200).json({ messages });
   } catch (err) {
-    console.log(err);
+    console.log("error in getMessages", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
