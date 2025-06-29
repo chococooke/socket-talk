@@ -25,6 +25,7 @@ io.on("connection", (socket) => {
     io.to(`group-${groupId}`).emit("receive-message", {
       text: message.text,
       userId: message.userId,
+      username: message.username,
       groupId,
       createdAt: new Date().toISOString(),
     });

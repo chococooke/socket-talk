@@ -28,9 +28,21 @@ module.exports.createGroup = async (req, res) => {
 
 module.exports.addMembers = async (req, res) => {
   const groupId = parseInt(req.params.id, 10);
+  const currentUserId = req.user.id;
   const { members } = req.body;
 
   try {
+    const isAdmin = await UserGroup.findOne({
+      where: {
+        userId: currentUserId,
+        groupId,
+        isAdmin: true,
+      },
+    });
+
+    if (!isAdmin) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
     const uniqueIds = [...new Set(members)];
 
     const memberRecords = uniqueIds.map((userId) => ({

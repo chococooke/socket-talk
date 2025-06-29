@@ -1,37 +1,44 @@
-const baseURL = `http://localhost:5000`;
-const socket = io(baseURL);
+import { state, setState } from "./state.js";
+import { renderGroupsList, renderMessages, appendMessage } from "./ui.js";
+import API from "./api.js";
+import { getToken, initAuth } from "./auth.js";
 
-const groupId = 1;
-const userId = 1;
+if (!initAuth()) {
+  alert("Not logged in.");
+  window.location.href = "/login.html";
+}
 
-socket.emit("join-group", groupId);
+const socket = io("http://localhost:5000");
+setState({ socket });
+
+const groupRes = await API.get("/groups");
+setState({ groups: groupRes.groups });
+renderGroupsList(groupRes.groups);
+
+export function joinSocketRoom(groupId) {
+  socket.emit("join-group", groupId);
+}
 
 socket.on("receive-message", (msg) => {
-  const div = document.createElement("div");
-  div.textContent = `${msg.userId}: ${msg.text}`;
-  document.getElementById("messages").appendChild(div);
+  appendMessage(msg);
 });
 
-async function sendMessage() {
-  const token = localStorage.getItem("token");
+document.getElementById("sendBtn").onclick = async () => {
   const input = document.getElementById("messageInput");
   const text = input.value.trim();
-  if (!text) return;
 
-  await axios.post(
-    `${baseURL}/groups/${groupId}/messages`,
-    {
+  if (!text || !state.selectedGroup) return;
+
+  await API.post(`/groups/${state.selectedGroup.id}/messages`, { text });
+
+  socket.emit("send-message", {
+    groupId: state.selectedGroup.id,
+    message: {
       text,
-      userId,
+      userId: state.currentUser.id,
+      username: state.currentUser.username
     },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  });
 
-  socket.emit("send-message", { groupId, message: { text, userId } });
   input.value = "";
-}
+};
