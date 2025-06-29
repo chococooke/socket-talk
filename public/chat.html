@@ -6,17 +6,43 @@
     <title>Document</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
   <body>
-    <h2>welcome to socket talk</h2>
-    <button onclick="logout()">Log out</button>
-    <div id="groupList"></div>
-    <div
-      id="messageList"
-      style="border: 1px solid #ccc; height: 300px; overflow-y: auto"
-    ></div>
-    <input type="text" id="messageInput" placeholder="Type a message" />
-    <button id="sendBtn">Send</button>
-    <script type="module" src="/js/chat.js"></script>
+    <div id="app">
+      <div class="main">
+        <!-- Left sidebar-->
+        <div class="container">
+          <h1>SocketTalk</h1>
+          <div id="groupList"></div>
+          <footer>
+            Made with ❤️ by
+            <a href="https://github.com/chococooke">chococooke</a>
+          </footer>
+        </div>
+
+        <!-- chat area -->
+        <div class="container chat-area">
+          <div id="messageList"></div>
+          <div class="chat-form">
+            <input type="text" id="messageInput" placeholder="Type a message" />
+            <button id="sendBtn">Send</button>
+          </div>
+        </div>
+        <!-- right sidebar -->
+
+        <div class="container">
+          <ul>
+            <li><h4>online users</h4></li>
+          </ul>
+          <button onclick="logout()">Log out</button>
+        </div>
+      </div>
+    </div>
   </body>
+  <script type="module" src="/js/chat.js"></script>
 </html>
