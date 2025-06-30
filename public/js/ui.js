@@ -31,13 +31,12 @@ export function renderMessages(messages) {
   messages.forEach((msg) => {
     const div = document.createElement("div");
     div.className = "message";
-    // div.innerText = `${msg.User.username}: ${msg.text}`;
     if (msg.User.username === state.currentUser.username) {
       div.classList.add("sent");
     } else {
       div.classList.add("received");
     }
-    div.innerHTML = `<strong style="color:black;">${msg.User.username}</strong> <p>${msg.text}<p>`;
+    div.innerHTML = `<strong>${msg.User.username}</strong> <p>${msg.text}<p>`;
 
     container.appendChild(div);
   });
@@ -48,12 +47,12 @@ export function appendMessage(msg) {
   const div = document.createElement("div");
   div.className = "message";
   if (msg.username !== state.currentUser.username) {
-    div.classList.add("recevied");
-  } else{
+    div.classList.add("received");
+  } else {
     div.classList.add("sent");
   }
 
-  div.innerHTML = `<strong style="color:black;">${msg.username}</strong> <p>${msg.text}<p>`;
+  div.innerHTML = `<strong>${msg.username}</strong> <p>${msg.text}<p>`;
 
   container.appendChild(div);
 

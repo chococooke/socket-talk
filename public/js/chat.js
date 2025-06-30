@@ -23,7 +23,8 @@ socket.on("receive-message", (msg) => {
   appendMessage(msg);
 });
 
-document.getElementById("sendBtn").onclick = async () => {
+document.getElementById("chat-form").onsubmit = async (event) => {
+  event.preventDefault();
   const input = document.getElementById("messageInput");
   const text = input.value.trim();
 
@@ -36,7 +37,7 @@ document.getElementById("sendBtn").onclick = async () => {
     message: {
       text,
       userId: state.currentUser.id,
-      username: state.currentUser.username
+      username: state.currentUser.username,
     },
   });
 
