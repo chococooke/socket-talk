@@ -17,7 +17,22 @@
       <!-- Left sidebar-->
       <div class="container">
         <h1><i class="fas fa-comments"></i> SocketTalk</h1>
-
+        <button id="create-grp-btn">Create Group</button>
+        <div id="grp-creation-form-wrapper" style="display: none">
+          <form id="create-grp-form">
+            <input
+              type="text"
+              name="grp-name"
+              id="grp-name-input"
+              placeholder="Group name"
+            />
+            <ul id="create-grp-select-members"></ul>
+            <!-- <div class="create-grp-form-actions"> -->
+              <button type="button" id="create-grp-btn-close">Cancel</button>
+              <button type="submit">Create Group</button>
+            <!-- </div> -->
+          </form>
+        </div>
         <div id="groupList"></div>
 
         <footer>
@@ -28,6 +43,7 @@
 
       <!-- chat area -->
       <div class="container chat-area">
+        <h1 id="chat-area-heading"></h1>
         <div id="messageList"></div>
         <form id="chat-form" class="chat-form">
           <input
@@ -48,7 +64,7 @@
             <h4><i class="fas fa-user-friends"></i> Online Users</h4>
           </li>
         </ul>
-        <button onclick="logout()">
+        <button id="logout-btn">
           <i class="fas fa-sign-out-alt"></i> Log out
         </button>
       </div>

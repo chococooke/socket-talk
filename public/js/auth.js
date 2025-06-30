@@ -17,10 +17,12 @@ export function initAuth() {
   if (!token) return false;
 
   const user = decodeToken(token);
-  if (!user) return false;
-
-  setState({ token, currentUser: user });
-  return true;
+  if (user.exp > Date.now()) {
+    return false;
+  } else {
+    setState({ token, currentUser: user });
+    return true;
+  }
 }
 
 export function logOut() {

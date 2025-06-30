@@ -1,11 +1,18 @@
 import { state, setState } from "./state.js";
-import { renderGroupsList, renderMessages, appendMessage } from "./ui.js";
+import {
+  renderGroupsList,
+  rendersUsersList,
+  renderMessages,
+  appendMessage,
+  renderChatArea,
+} from "./ui.js";
 import API from "./api.js";
-import { getToken, initAuth } from "./auth.js";
+import { getToken, initAuth, logOut } from "./auth.js";
+
 
 if (!initAuth()) {
   alert("Not logged in.");
-  window.location.href = "/login.html";
+  window.location.href = `${state.baseUrl}/login.html`;
 }
 
 const socket = io("http://localhost:5000");
@@ -14,6 +21,12 @@ setState({ socket });
 const groupRes = await API.get("/groups");
 setState({ groups: groupRes.groups });
 renderGroupsList(groupRes.groups);
+
+const usersRes = await API.get("/users");
+setState({ users: usersRes.users });
+rendersUsersList(usersRes.users);
+
+renderChatArea(state.selectedGroup);
 
 export function joinSocketRoom(groupId) {
   socket.emit("join-group", groupId);
@@ -43,3 +56,8 @@ document.getElementById("chat-form").onsubmit = async (event) => {
 
   input.value = "";
 };
+
+const logOutBtn = document.getElementById("logout-btn");
+logOutBtn.addEventListener("click", () => {
+  logOut();
+});

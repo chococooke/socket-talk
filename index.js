@@ -39,6 +39,7 @@ io.on("connection", (socket) => {
 const authRoutes = require("./routes/auth.routes");
 const groupRoutes = require("./routes/group.routes");
 const messageRoutes = require("./routes/message.routes");
+const userRoutes = require("./routes/user.routes");
 const path = require("path");
 
 app.use(express.json());
@@ -46,6 +47,7 @@ app.use(express.static(path.resolve("./public")));
 app.use("/", authRoutes);
 app.use("/", groupRoutes);
 app.use("/", messageRoutes);
+app.use("/", userRoutes);
 
 server.listen(5000, () => {
   console.log("Server is running on port 5000");

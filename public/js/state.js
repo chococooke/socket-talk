@@ -1,4 +1,6 @@
 export const state = {
+  users: [],
+  grpSelectedUsers: [],
   baseUrl: `http://localhost:5000`,
   currentUser: null,
   token: null,
