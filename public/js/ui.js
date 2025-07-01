@@ -2,11 +2,6 @@ import { state, setState } from "./state.js";
 import API from "./api.js";
 import { joinSocketRoom } from "./chat.js";
 
-// document.addEventListener("DOMContentLoaded", () => {
-//   const uploadFormWrapper = document.getElementById("upload-form-wrapper");
-//   uploadFormWrapper.style.display = "none";
-// });
-
 export function renderGroupsList(groups) {
   const list = document.getElementById("groupList");
   const messageList = document.getElementById("messageList");
@@ -131,6 +126,20 @@ export function appendMessage(msg) {
   container.scrollTo({
     top: container.scrollHeight,
     behavior: "smooth",
+  });
+}
+
+export function renderOnlineUsers(onlineUsers) {
+  const ul = document.getElementById("online-users");
+  ul.innerHTML = "";
+
+  onlineUsers.forEach((user) => {
+    const li = document.createElement("li");
+    if (user.username === state.currentUser.username) {
+      li.style.display = "none";
+    }
+    li.textContent = user.username;
+    ul.appendChild(li);
   });
 }
 

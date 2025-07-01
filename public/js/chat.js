@@ -4,6 +4,7 @@ import {
   rendersUsersList,
   appendMessage,
   renderChatArea,
+  renderOnlineUsers,
 } from "./ui.js";
 import API from "./api.js";
 import { initAuth, logOut } from "./auth.js";
@@ -15,6 +16,15 @@ if (!initAuth()) {
 
 const socket = io("http://localhost:5000");
 setState({ socket });
+
+socket.emit("user-online", {
+  id: state.currentUser.id,
+  username: state.currentUser.username,
+});
+
+socket.on("update-online-users", (users) => {
+  renderOnlineUsers(users);
+});
 
 const groupRes = await API.get("/groups");
 setState({ groups: groupRes.groups });

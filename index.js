@@ -11,13 +11,19 @@ const io = new Server(server, {
   },
 });
 
+const onlineUsers = new Map();
+
 io.on("connection", (socket) => {
   console.log(`User connected`, socket.id);
+
+  socket.on("user-online", (user) => {
+    onlineUsers.set(socket.id, user);
+    io.emit("update-online-users", Array.from(onlineUsers.values()));
+  });
 
   // join group room
   socket.on("join-group", (groupId) => {
     socket.join(`group-${groupId}`);
-    console.log(`${socket.id} joined group-${groupId}`);
   });
 
   // send message
@@ -32,7 +38,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log(`User disconnected: `, socket.id);
+    onlineUsers.delete(socket.id);
+    io.emit("update-online-users", Array.from(onlineUsers.values()));
   });
 });
 
@@ -42,6 +49,7 @@ const messageRoutes = require("./routes/message.routes");
 const userRoutes = require("./routes/user.routes");
 const uploadRoutes = require("./routes/upload.routes");
 const path = require("path");
+const { compareSync } = require("bcrypt");
 
 app.use(express.json());
 app.use(express.static(path.resolve("./public")));

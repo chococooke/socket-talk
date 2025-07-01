@@ -42,6 +42,11 @@ body {
   overflow: hidden;
 }
 
+.brand{
+  font-weight: bolder;
+  font-size: 32px;
+}
+
 .container:first-child {
   width: 25%;
   padding: 1rem;
@@ -109,6 +114,13 @@ footer a {
   font-size: 1rem;
   margin-bottom: 0.4rem;
   transition: background-color 0.2s;
+  height: 100px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
 }
 
 #grp-item-active{
