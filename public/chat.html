@@ -16,8 +16,10 @@
     <div class="main">
       <!-- Left sidebar-->
       <div class="container">
-        <h1 class="brand"> SocketTalk</h1>
-        <button id="create-grp-btn"><i class="fa-solid fa-user-plus"></i> Create Group</button>
+        <h1 class="brand">SocketTalk</h1>
+        <button id="create-grp-btn">
+          <i class="fa-solid fa-user-plus"></i> Create Group
+        </button>
         <div id="grp-creation-form-wrapper" style="display: none">
           <form id="create-grp-form">
             <input
@@ -44,6 +46,14 @@
       <!-- chat area -->
       <div class="container chat-area">
         <h1 id="chat-area-heading"></h1>
+        <div id="grp-settings" style="display: none">
+          <div>
+            <button id="grp-settings-close">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <ul id="grp-settings-members"></ul>
+          </div>
+        </div>
         <div id="messageList"></div>
         <form id="chat-form" class="chat-form">
           <button id="file-upload-btn" type="button">

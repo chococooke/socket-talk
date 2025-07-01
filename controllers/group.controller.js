@@ -1,4 +1,5 @@
 const { Group, Message, User, UserGroup } = require("../models");
+const Sequelize = require("sequelize");
 
 module.exports.createGroup = async (req, res) => {
   const userId = req.user.id;
@@ -69,14 +70,6 @@ module.exports.getUserGroups = async (req, res) => {
         {
           model: User,
           as: "members",
-          where: { id: userId },
-          attributes: [],
-          through: { attributes: [] },
-          required: true,
-        },
-        {
-          model: User,
-          as: "members",
           attributes: ["id", "username"],
           through: { attributes: ["isAdmin"] },
         },
@@ -86,17 +79,66 @@ module.exports.getUserGroups = async (req, res) => {
           include: [
             {
               model: User,
-              attributes: ["id", "username"],
+              attributes: ["username"],
             },
           ],
         },
       ],
+      where: {
+        id: {
+          [Sequelize.Op.in]: (
+            await UserGroup.findAll({
+              where: { userId: req.user.id },
+              attributes: ["groupId"],
+            })
+          ).map((link) => link.groupId),
+        },
+      },
       order: [[Message, "createdAt", "ASC"]],
     });
 
     res.status(200).json({ groups });
   } catch (err) {
     console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.toggleAdmin = async (req, res) => {
+  const { groupId, userId } = req.params;
+  const currentUserId = req.user.id;
+
+  try {
+    const currentUserLink = await UserGroup.findOne({
+      where: { groupId, userId: currentUserId },
+    });
+
+    if (!currentUserLink || !currentUserLink.isAdmin) {
+      return res
+        .status(403)
+        .json({ error: "Only Admin can perform this action" });
+    }
+
+    if (parseInt(userId) === currentUserId) {
+      return res.status(400).json("You cannot demote yourself");
+    }
+
+    const targetLink = await UserGroup.findOne({
+      where: { groupId, userId },
+    });
+
+    if (!targetLink) {
+      return res.status(404).json({ error: "User not in this group" });
+    }
+
+    targetLink.isAdmin = !targetLink.isAdmin;
+    await targetLink.save();
+
+    res.status(200).json({
+      success: `User is now ${targetLink.isAdmin ? "an admin" : "a member"}`,
+    });
+  } catch (err) {
+    console.error("Error in toggleAdmin", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

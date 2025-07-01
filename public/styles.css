@@ -123,7 +123,7 @@ footer a {
   text-align: left;
 }
 
-.group-item > i{
+.group-item > i {
   font-size: 18px;
   padding: 0.5rem 0.4rem;
   max-width: 18%;
@@ -133,7 +133,7 @@ footer a {
   border-radius: 50%;
 }
 
-.group-item > span{
+.group-item > span {
   width: 80%;
   text-align: left;
 }
@@ -147,6 +147,90 @@ footer a {
   background-color: #2a2a2a;
 }
 
+#grp-settings-close {
+  position: absolute;
+  top: -4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff3f33;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0.6rem;
+  cursor: pointer;
+}
+
+#grp-settings {
+  border-radius: 10px;
+  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px);
+}
+
+#grp-settings > div {
+  color: var(--bg);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--text);
+  width: 30%;
+  border-radius: 10px;
+}
+
+#grp-settings > div > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  list-style-type: none;
+  width: 100%;
+  padding: 1rem;
+}
+
+#grp-settings > div > ul > li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  background-color: var(--scrollbar);
+  color: var(--text);
+}
+
+#grp-settings > div > ul > li > button {
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+  background-color: var(--card);
+  color: var(--text);
+  border-radius: 8px;
+  border: none;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+#grp-settings > div > ul > li > button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#grp-settings > div > ul > li > button[disabled]:hover{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#grp-settings > div > ul > li > button:hover {
+  opacity: 1;
+}
+
 #chat-area-heading {
   color: var(--accent);
   display: flex;
@@ -157,7 +241,15 @@ footer a {
   border-bottom: 1px solid var(--scrollbar-hover);
 }
 
-#chat-area-heading > button {
+#chat-area-heading > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  gap: 0.6rem;
+}
+
+#chat-area-heading > div > button {
   width: 20px;
   height: 20px;
   padding: 0.3rem;
@@ -170,6 +262,10 @@ footer a {
   border: none;
   cursor: pointer;
   background-color: #ff3f33;
+}
+
+#chat-area-heading > div > button:first-child {
+  background-color: var(--accent);
 }
 
 .message {

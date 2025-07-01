@@ -5,7 +5,7 @@ export const state = {
   currentUser: null,
   token: null,
   groups: [],
-  selectedGroup: null,
+  selectedGroup: 1,
   message: [],
   socket: null,
 };

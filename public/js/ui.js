@@ -8,10 +8,12 @@ export function renderGroupsList(groups) {
   list.innerHTML = "";
 
   groups.forEach((group) => {
+    const grpSettings = document.getElementById("grp-settings");
     const item = document.createElement("div");
     item.innerHTML = `<i class="fa-solid fa-users"></i> <span>${group.name}</span>`;
     item.className = "group-item";
     item.onclick = async () => {
+      grpSettings.style.display = "none";
       const prevActiveGrp = document.getElementById("grp-item-active");
       if (!prevActiveGrp) {
         item.setAttribute("id", "grp-item-active");
@@ -64,18 +66,46 @@ export function rendersUsersList(users) {
 }
 
 export function renderChatArea(group) {
+  if(group === null || !group) return;
+  renderGroupMemberSettings(group.members);
+
   const chatForm = document.getElementById("chat-form");
   const heading = document.getElementById("chat-area-heading");
+
+  const headingOptions = document.createElement("div");
+
   const chatCloseBtn = document.createElement("button");
+  const grpSettingsBtn = document.createElement("button");
+
+  const grpSettings = document.getElementById("grp-settings");
+  const grpSettingsCloseBtn = document.getElementById("grp-settings-close");
+
   chatCloseBtn.className = "chat-close-btn";
   chatCloseBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
   chatCloseBtn.title = "Close this chat";
 
+  grpSettingsBtn.innerHTML = `<i class="fa-solid fa-gear"></i>`;
+
   chatCloseBtn.addEventListener("click", () => {
+    console.log(state.selectedGroup);
     setState({ selectedGroup: null });
-    renderChatArea(null);
+    renderChatArea(state.selectedGroup);
   });
-  heading.appendChild(chatCloseBtn);
+
+  grpSettingsBtn.addEventListener("click", () => {
+    if (grpSettings.style.display === "none") {
+      grpSettings.style.display = "";
+    } else {
+      grpSettings.style.display = "none";
+    }
+  });
+
+  grpSettingsCloseBtn.addEventListener("click", () => {
+    grpSettings.style.display = "none";
+  });
+
+  headingOptions.append(grpSettingsBtn, chatCloseBtn);
+  heading.appendChild(headingOptions);
   const messageList = document.getElementById("messageList");
   if (group === null) {
     heading.innerHTML = "";
@@ -87,8 +117,49 @@ export function renderChatArea(group) {
     chatForm.style.display = "";
     messageList.style.display = "";
     heading.innerHTML = group.name;
-    heading.appendChild(chatCloseBtn);
+    heading.appendChild(headingOptions);
   }
+}
+
+function renderGroupMemberSettings(members) {
+  if (!members || members === null) return;
+  const currentUser = members.filter(
+    (member) => member.username === state.currentUser.username
+  );
+
+  if (!currentUser[0].UserGroup.isAdmin) return;
+
+  const membersList = document.getElementById("grp-settings-members");
+  membersList.innerHTML = "";
+
+  members.forEach((member) => {
+    const li = document.createElement("li");
+    const p = document.createElement("p");
+    const btn = document.createElement("button");
+
+    if (member.username === state.currentUser.username)
+      btn.setAttribute("disabled", "");
+
+    p.textContent = member.username;
+    btn.textContent = member.UserGroup.isAdmin ? "Remove Admin" : "Make Admin";
+
+    btn.addEventListener("click", async () => {
+      try {
+        const res = await API.post(
+          `/groups/${state.selectedGroup.id}/members/${member.id}/admin`,
+          {}
+        );
+        alert(res.success);
+        member.UserGroup.isAdmin = !member.UserGroup.isAdmin;
+        renderGroupMemberSettings(members);
+      } catch (err) {
+        console.error("Error in toggleAdmin", err);
+      }
+    });
+
+    li.append(p, btn);
+    membersList.appendChild(li);
+  });
 }
 
 export function renderMessages(messages) {
@@ -211,12 +282,12 @@ export function showCriticalAlert(alert, redirection, action) {
   const actionBtn = document.createElement("button");
   actionBtn.textContent = action;
   actionBtn.onclick = () => {
-    if(!redirection || redirection !== ""){
+    if (!redirection || redirection !== "") {
       window.location.href = redirection;
     }
 
     document.body.removeChild(alertDiv);
-  }
+  };
 
   alertDivChild.append(alertText, actionBtn);
   alertDiv.appendChild(alertDivChild);
