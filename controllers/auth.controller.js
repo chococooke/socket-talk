@@ -15,7 +15,7 @@ module.exports.signup = async (req, res) => {
       password: hashed,
     });
 
-    res.status(201).json({ sucess: true, userId: user.id });
+    res.status(201).json({ success: true, userId: user.id });
   } catch (err) {
     console.error("SignUpError", err);
     res.status(500).json({ error: "Internal Server Error" });

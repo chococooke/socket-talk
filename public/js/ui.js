@@ -9,7 +9,7 @@ export function renderGroupsList(groups) {
 
   groups.forEach((group) => {
     const item = document.createElement("div");
-    item.innerText = group.name;
+    item.innerHTML = `<i class="fa-solid fa-users"></i> <span>${group.name}</span>`;
     item.className = "group-item";
     item.onclick = async () => {
       const prevActiveGrp = document.getElementById("grp-item-active");
@@ -199,3 +199,27 @@ uploadFileBtn.addEventListener("click", () => {
 uploadFormCancelBtn.addEventListener("click", () => {
   uploadFormWrapper.style.display = "none";
 });
+
+export function showCriticalAlert(alert, redirection, action) {
+  const alertDiv = document.createElement("div");
+  const alertDivChild = document.createElement("div");
+  alertDiv.className = "critical-alert";
+  const alertText = document.createElement("p");
+
+  alertText.textContent = alert;
+
+  const actionBtn = document.createElement("button");
+  actionBtn.textContent = action;
+  actionBtn.onclick = () => {
+    if(!redirection || redirection !== ""){
+      window.location.href = redirection;
+    }
+
+    document.body.removeChild(alertDiv);
+  }
+
+  alertDivChild.append(alertText, actionBtn);
+  alertDiv.appendChild(alertDivChild);
+
+  document.body.appendChild(alertDiv);
+}

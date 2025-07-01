@@ -17,7 +17,7 @@ export function initAuth() {
   if (!token) return false;
 
   const user = decodeToken(token);
-  if (user.exp > Date.now()) {
+  if (!(user.exp < Date.now())) {
     return false;
   } else {
     setState({ token, currentUser: user });

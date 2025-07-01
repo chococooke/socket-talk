@@ -5,13 +5,13 @@ import {
   appendMessage,
   renderChatArea,
   renderOnlineUsers,
+  showCriticalAlert,
 } from "./ui.js";
 import API from "./api.js";
 import { initAuth, logOut } from "./auth.js";
 
 if (!initAuth()) {
-  alert("Not logged in.");
-  window.location.href = `${state.baseUrl}/login.html`;
+  showCriticalAlert("Session Ended! Please Log in.", `${state.baseUrl}/login.html`, "Okay");
 }
 
 const socket = io("http://localhost:5000");

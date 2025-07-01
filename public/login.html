@@ -5,20 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Login</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: #1e1e1e;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      .main {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 96%;
+        height: 96%;
+        background-color: #121212;
+        border-radius: 10px;
+      }
+
+      form {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 30%;
+        /* height: 50%; */
+        background-color: #444;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 10px;
+        padding: 1rem;
+      }
+
+      form > input,
+      form > button {
+        width: 100%;
+        border-radius: 8px;
+        border: none;
+        background-color: #f2f2f2;
+        margin: 0.4rem;
+        padding: 0.6rem;
+        /* height: 2rem; */
+        font-size: 20px;
+      }
+
+      form > h2{
+        font-weight: bolder;
+        color: #f2f2f2;
+      }
+
+
+      form > button {
+        background-color: #5f9df7;
+      }
+    </style>
   </head>
   <body>
-    <input type="text" name="email" id="email" placeholder="email" />
-    <input
-      type="password"
-      name="password"
-      id="password"
-      placeholder="Password"
-    />
-    <button onclick="login()">Login</button>
+    <div class="main">
+      <form id="form">
+        <h2>Log into your account</h2>
+        <input type="text" name="email" id="email" placeholder="email" />
+        <input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+        />
+        <button type="submit">Login</button>
+      </form>
+    </div>
   </body>
   <script>
     const baseUrl = `http://localhost:5000`;
-    async function login() {
+    const form = document.getElementById("form");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
@@ -32,6 +98,6 @@
       } else {
         alert("Login failed!");
       }
-    }
+    });
   </script>
 </html>
