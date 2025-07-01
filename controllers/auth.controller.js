@@ -1,8 +1,9 @@
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-const SECRET = "super_secret";
+const SECRET = process.env.JWT_SECRET;
 
 module.exports.signup = async (req, res) => {
   try {

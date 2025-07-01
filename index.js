@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
+require("dotenv").config();
 
 const app = express();
 const server = http.createServer(app);
@@ -10,6 +11,8 @@ const io = new Server(server, {
     origin: "*",
   },
 });
+
+const PORT = process.env.PORT || 5000;
 
 const onlineUsers = new Map();
 
@@ -60,6 +63,6 @@ app.use("/", messageRoutes);
 app.use("/", userRoutes);
 app.use("/", uploadRoutes);
 
-server.listen(5000, () => {
+server.listen(PORT, () => {
   console.log("Server is running on port 5000");
 });
