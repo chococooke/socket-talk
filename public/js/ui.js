@@ -2,9 +2,14 @@ import { state, setState } from "./state.js";
 import API from "./api.js";
 import { joinSocketRoom } from "./chat.js";
 
+// document.addEventListener("DOMContentLoaded", () => {
+//   const uploadFormWrapper = document.getElementById("upload-form-wrapper");
+//   uploadFormWrapper.style.display = "none";
+// });
 
 export function renderGroupsList(groups) {
   const list = document.getElementById("groupList");
+  const messageList = document.getElementById("messageList");
   list.innerHTML = "";
 
   groups.forEach((group) => {
@@ -12,8 +17,21 @@ export function renderGroupsList(groups) {
     item.innerText = group.name;
     item.className = "group-item";
     item.onclick = async () => {
+      const prevActiveGrp = document.getElementById("grp-item-active");
+      if (!prevActiveGrp) {
+        item.setAttribute("id", "grp-item-active");
+      } else {
+        prevActiveGrp.removeAttribute("id");
+        item.setAttribute("id", "grp-item-active");
+      }
+
       setState({ selectedGroup: group });
       renderChatArea(group);
+
+      messageList.scrollTo({
+        top: messageList.scrollHeight,
+        behavior: "smooth",
+      });
 
       const res = await API.get(`/groups/${group.id}/messages`);
       setState({ messages: res.messages });
@@ -51,12 +69,30 @@ export function rendersUsersList(users) {
 }
 
 export function renderChatArea(group) {
+  const chatForm = document.getElementById("chat-form");
   const heading = document.getElementById("chat-area-heading");
+  const chatCloseBtn = document.createElement("button");
+  chatCloseBtn.className = "chat-close-btn";
+  chatCloseBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+  chatCloseBtn.title = "Close this chat";
+
+  chatCloseBtn.addEventListener("click", () => {
+    setState({ selectedGroup: null });
+    renderChatArea(null);
+  });
+  heading.appendChild(chatCloseBtn);
   const messageList = document.getElementById("messageList");
   if (group === null) {
-    heading.innerText = "Select A Group";
+    heading.innerHTML = "";
+    heading.style.display = "none";
+    chatForm.style.display = "none";
+    messageList.style.display = "none";
   } else {
-    heading.innerText = group.name;
+    heading.style.display = "";
+    chatForm.style.display = "";
+    messageList.style.display = "";
+    heading.innerHTML = group.name;
+    heading.appendChild(chatCloseBtn);
   }
 }
 
@@ -133,6 +169,24 @@ createGrpForm.addEventListener("submit", async (e) => {
   renderGroupsList(groupsRes.groups);
 
   createGrpForm.reset();
-  createGrpForm.style.display = "none";
+  createGrpDiv.style.display = "none";
   rendersUsersList(state.users);
+});
+
+// upload form handling
+const uploadFormWrapper = document.getElementById("upload-form-wrapper");
+const uploadFormCancelBtn = document.getElementById("upload-form-cancel");
+const uploadFileBtn = document.getElementById("file-upload-btn");
+
+uploadFileBtn.addEventListener("click", () => {
+  console.log(uploadFormWrapper.style.display);
+  if (uploadFormWrapper.style.display === "none") {
+    uploadFormWrapper.style.display = "";
+  } else {
+    uploadFormWrapper.style.display = "none";
+  }
+});
+
+uploadFormCancelBtn.addEventListener("click", () => {
+  uploadFormWrapper.style.display = "none";
 });

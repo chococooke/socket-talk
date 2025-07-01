@@ -111,20 +111,64 @@ footer a {
   transition: background-color 0.2s;
 }
 
+#grp-item-active{
+  background-color: #444;
+  border: 1px solid var(--muted);
+}
+
 .group-item:hover {
   background-color: #2a2a2a;
+}
+
+#chat-area-heading{
+  color: var(--accent);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--scrollbar-hover);
+}
+
+#chat-area-heading > button{
+  width: 20px;
+  height: 20px;
+  padding: 0.3rem;
+  margin-right: 0.3rem;
+
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  background-color: #ff3f33;
 }
 
 .message {
   background-color: var(--muted);
   color: var(--text);
-  padding: 0.7rem 1rem;
+  padding: 0.3rem;
   border-radius: 10px;
   margin: 0.2rem 0;
   max-width: 70%;
   width: fit-content;
   word-wrap: break-word;
   font-size: 18px;
+}
+
+.message-link{
+  color: white;
+  text-decoration: none;
+}
+
+.message-file{
+  border-left:  2px solid var(--accent);  
+}
+
+.message-file > a{
+  text-decoration: none;
+  color: #fff;
 }
 
 .message > strong {
@@ -325,7 +369,7 @@ footer a {
 #create-grp-form button[type="button"] {
   /* align-self: flex-start; */
   display: inline;
-  background-color: #FF3F33;
+  background-color: #ff3f33;
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
@@ -338,4 +382,92 @@ footer a {
 
 #create-grp-form button[type="submit"]:hover {
   background-color: #5b52d8;
+}
+
+#upload-form-wrapper {
+  /* display: none; */
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease-in-out;
+}
+
+#upload-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f2f2f2;
+  padding: 1rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  /* height: 300px; */
+  width: 30vw;
+}
+
+.upload-form-btns {
+  padding-top: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.upload-form-btns > button {
+  font-size: 16px;
+  padding: 1rem;
+  width: 49%;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-form-btns > button:hover{
+  box-shadow: 0 0 10px var(--muted);
+}
+
+.upload-form-btns > button[type='button']{
+  background-color: #ff3f33;
+}
+
+.upload-form-btns > button[type='submit']{
+  background-color: var(--accent);
+}
+
+.upload-form-input > input {
+  /* background-color: blue; */
+  padding: 2rem;
+  border: 2px dashed var(--card);
+  opacity: 0;
+  width: 100%;
+}
+
+.upload-form-input {
+  width: 100%;
+  position: relative;
+  border: 3px dashed var(--muted);
+  border-radius: 12px;
+  /* background-color: orangered; */
+}
+
+.upload-form-input > label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 32px;
+}
+
+.upload-form-input > label {
+  color: var(--muted);
 }

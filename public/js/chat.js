@@ -2,13 +2,11 @@ import { state, setState } from "./state.js";
 import {
   renderGroupsList,
   rendersUsersList,
-  renderMessages,
   appendMessage,
   renderChatArea,
 } from "./ui.js";
 import API from "./api.js";
-import { getToken, initAuth, logOut } from "./auth.js";
-
+import { initAuth, logOut } from "./auth.js";
 
 if (!initAuth()) {
   alert("Not logged in.");
@@ -56,6 +54,47 @@ document.getElementById("chat-form").onsubmit = async (event) => {
 
   input.value = "";
 };
+
+// file upload
+const uploadFormWrapper = document.getElementById("upload-form-wrapper");
+const uploadForm = document.getElementById("upload-form");
+uploadForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const fileInput = document.getElementById("file-input");
+  const file = fileInput.files[0];
+  if (!file || !state.selectedGroup) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${state.baseUrl}/upload`, {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await res.json();
+
+  const messageText = file.type.startsWith("image/")
+    ? `<img class="file-message" src='${data.url}' style='max-width: 200px; border-radius: 8px;' />`
+    : `<p class='message-file'><i class="fa-solid fa-link"></i> <a class='message-link' href='${data.url}' target='_blank'> ${data.originalName}</a></p>`;
+
+  await API.post(`/groups/${state.selectedGroup.id}/messages`, {
+    text: messageText,
+  });
+
+  socket.emit("send-message", {
+    groupId: state.selectedGroup.id,
+    message: {
+      text: messageText,
+      userId: state.currentUser.id,
+      username: state.currentUser.username,
+    },
+  });
+
+  fileInput.value = "";
+  uploadFormWrapper.style.display = "none";
+});
 
 const logOutBtn = document.getElementById("logout-btn");
 logOutBtn.addEventListener("click", () => {
