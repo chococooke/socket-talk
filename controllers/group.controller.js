@@ -99,7 +99,7 @@ module.exports.getUserGroups = async (req, res) => {
 
     res.status(200).json({ groups });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -136,6 +136,46 @@ module.exports.toggleAdmin = async (req, res) => {
 
     res.status(200).json({
       success: `User is now ${targetLink.isAdmin ? "an admin" : "a member"}`,
+    });
+  } catch (err) {
+    console.error("Error in toggleAdmin", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.removeUser = async (req, res) => {
+  const { groupId, userId } = req.params;
+  const currentUserId = req.user.id;
+
+  try {
+    const currentUserLink = await UserGroup.findOne({
+      where: { groupId, userId: currentUserId },
+      // attributes: [],
+    });
+
+    if (!currentUserLink || !currentUserLink.isAdmin) {
+      return res
+        .status(403)
+        .json({ error: "Only Admin can perform this action" });
+    }
+
+    const targetLink = await UserGroup.findOne({
+      where: { groupId, userId },
+    });
+
+    if (!targetLink) {
+      return res.status(404).json({ error: "User not in this group" });
+    }
+
+    await UserGroup.destroy({
+      where: {
+        userId: targetLink.dataValues.userId,
+        groupId: targetLink.dataValues.groupId,
+      },
+    });
+
+    res.status(200).json({
+      success: `Removed user successfully`,
     });
   } catch (err) {
     console.error("Error in toggleAdmin", err);

@@ -65,10 +65,9 @@ export function rendersUsersList(users) {
   });
 }
 
-export function renderChatArea(group) {
-  if(group === null || !group) return;
-  renderGroupMemberSettings(group.members);
+const grpSettings = document.getElementById("grp-settings");
 
+export function renderChatArea(group) {
   const chatForm = document.getElementById("chat-form");
   const heading = document.getElementById("chat-area-heading");
 
@@ -77,7 +76,6 @@ export function renderChatArea(group) {
   const chatCloseBtn = document.createElement("button");
   const grpSettingsBtn = document.createElement("button");
 
-  const grpSettings = document.getElementById("grp-settings");
   const grpSettingsCloseBtn = document.getElementById("grp-settings-close");
 
   chatCloseBtn.className = "chat-close-btn";
@@ -87,7 +85,6 @@ export function renderChatArea(group) {
   grpSettingsBtn.innerHTML = `<i class="fa-solid fa-gear"></i>`;
 
   chatCloseBtn.addEventListener("click", () => {
-    console.log(state.selectedGroup);
     setState({ selectedGroup: null });
     renderChatArea(state.selectedGroup);
   });
@@ -118,46 +115,108 @@ export function renderChatArea(group) {
     messageList.style.display = "";
     heading.innerHTML = group.name;
     heading.appendChild(headingOptions);
+    renderGroupMemberSettings(group.members);
   }
 }
 
 function renderGroupMemberSettings(members) {
-  if (!members || members === null) return;
+  const membersList = document.getElementById("grp-settings-members");
+  const usersList = document.createElement("ul");
+  const addUsersCTA = document.createElement("button");
+  addUsersCTA.textContent = "Add more users";
+
+  if (!members || members === null) {
+    membersList.innerHTML = "";
+    return;
+  }
+
   const currentUser = members.filter(
     (member) => member.username === state.currentUser.username
   );
 
-  if (!currentUser[0].UserGroup.isAdmin) return;
+  const isAdmin = currentUser[0].UserGroup.isAdmin;
+  // if (!isAdmin) return;
 
-  const membersList = document.getElementById("grp-settings-members");
   membersList.innerHTML = "";
 
-  members.forEach((member) => {
+  members.forEach((member, index) => {
     const li = document.createElement("li");
     const p = document.createElement("p");
-    const btn = document.createElement("button");
-
-    if (member.username === state.currentUser.username)
-      btn.setAttribute("disabled", "");
+    const btns = document.createElement("div");
+    const roleBtn = document.createElement("button");
+    const rmvBtn = document.createElement("button");
+    rmvBtn.style.backgroundColor = "#ff3f33";
+    rmvBtn.style.color = "#fff";
+    rmvBtn.className = "exit-grp-btn";
 
     p.textContent = member.username;
-    btn.textContent = member.UserGroup.isAdmin ? "Remove Admin" : "Make Admin";
+    roleBtn.textContent = member.UserGroup.isAdmin
+      ? "Remove Admin"
+      : "Make Admin";
 
-    btn.addEventListener("click", async () => {
+    if (!isAdmin) {
+      roleBtn.style.display = "none";
+      rmvBtn.style.display = "none";
+      if (member.UserGroup.isAdmin) {
+        p.innerHTML = `${member.username}<small id='admin-tag'>admin</small>`;
+      }
+    }
+
+    rmvBtn.textContent = "Remove";
+    rmvBtn.style.display = isAdmin ? "" : "none";
+
+    if (member.username === state.currentUser.username) {
+      roleBtn.setAttribute("disabled", "");
+      rmvBtn.textContent = "Exit Group";
+    }
+
+    if (member.username === state.currentUser.username) {
+      rmvBtn.style.display = "";
+      rmvBtn.textContent = "Exit Group";
+    }
+
+    roleBtn.addEventListener("click", async () => {
       try {
         const res = await API.post(
           `/groups/${state.selectedGroup.id}/members/${member.id}/admin`,
           {}
         );
-        alert(res.success);
+
         member.UserGroup.isAdmin = !member.UserGroup.isAdmin;
         renderGroupMemberSettings(members);
+        alert(res.success);
       } catch (err) {
         console.error("Error in toggleAdmin", err);
       }
     });
 
-    li.append(p, btn);
+    rmvBtn.addEventListener("click", async () => {
+      try {
+        const res = await API.post(
+          `/groups/${state.selectedGroup.id}/members/${member.id}/delete`,
+          {}
+        );
+
+        if (member.id === state.currentUser.id) {
+          const currentGrpIndex = state.groups.indexOf(state.selectedGroup);
+          state.groups.splice(currentGrpIndex, 1);
+          renderGroupsList(state.groups);
+          setState({ selectedGroup: null });
+          renderChatArea(state.selectedGroup);
+          grpSettings.style.display = "none";
+          return;
+        }
+
+        members.splice(index, 1);
+        renderGroupMemberSettings(members);
+        alert(res.success);
+      } catch (err) {
+        console.error("Error in toggleAdmin", err);
+      }
+    });
+
+    btns.append(rmvBtn, roleBtn);
+    li.append(p, btns);
     membersList.appendChild(li);
   });
 }
@@ -259,7 +318,6 @@ const uploadFormCancelBtn = document.getElementById("upload-form-cancel");
 const uploadFileBtn = document.getElementById("file-upload-btn");
 
 uploadFileBtn.addEventListener("click", () => {
-  console.log(uploadFormWrapper.style.display);
   if (uploadFormWrapper.style.display === "none") {
     uploadFormWrapper.style.display = "";
   } else {

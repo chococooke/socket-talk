@@ -52,7 +52,6 @@ const messageRoutes = require("./routes/message.routes");
 const userRoutes = require("./routes/user.routes");
 const uploadRoutes = require("./routes/upload.routes");
 const path = require("path");
-const { compareSync } = require("bcrypt");
 
 app.use(express.json());
 app.use(express.static(path.resolve("./public")));

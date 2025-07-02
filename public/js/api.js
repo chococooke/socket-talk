@@ -1,5 +1,6 @@
-import { getToken } from "./auth.js";
+import { getToken, logOut } from "./auth.js";
 import { state } from "./state.js";
+import { showCriticalAlert } from "./ui.js";
 
 const baseUrl = state.baseUrl;
 
@@ -7,7 +8,13 @@ const API = {
   async get(path) {
     return fetch(`${baseUrl}${path}`, {
       headers: { Authorization: `Bearer ${getToken()}` },
-    }).then((res) => res.json());
+    }).then((res) => {
+      if (res.status !== 200) {
+        console.log(res);
+      } else {
+        return res.json();
+      }
+    });
   },
   async post(path, body) {
     return fetch(`${baseUrl}${path}`, {
@@ -17,7 +24,13 @@ const API = {
         Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(body),
-    }).then((res) => res.json());
+    }).then((res) => {
+      if (res.status !== 200) {
+        console.log(res);
+      } else {
+        return res.json();
+      }
+    });
   },
 };
 

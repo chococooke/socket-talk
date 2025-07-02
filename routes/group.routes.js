@@ -11,5 +11,10 @@ router.post(
   verifyToken,
   groupController.toggleAdmin
 );
+router.post(
+  "/groups/:groupId/members/:userId/delete",
+  verifyToken,
+  groupController.removeUser
+);
 
 module.exports = router;

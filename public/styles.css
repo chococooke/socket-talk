@@ -206,7 +206,8 @@ footer a {
   color: var(--text);
 }
 
-#grp-settings > div > ul > li > button {
+#grp-settings > div > ul > li > div > button {
+  margin: 0 0.3rem;
   cursor: pointer;
   padding: 0.4rem 0.6rem;
   background-color: var(--card);
@@ -217,18 +218,32 @@ footer a {
   transition: all 0.3s ease;
 }
 
-#grp-settings > div > ul > li > button[disabled] {
+#grp-settings > div > ul > li > div > button[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-#grp-settings > div > ul > li > button[disabled]:hover{
+#grp-settings > div > ul > li > div > button[disabled]:hover {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
 #grp-settings > div > ul > li > button:hover {
   opacity: 1;
+}
+
+#admin-tag{
+  background-color: var(--bg);
+  padding: 1px;
+  margin: 0 0.1rem;
+  font-size: 8px;
+  border-radius: 2px;
+  color: red;
+  text-spacing-trim: 0.4px;
+}
+
+.exit-grp-btn{
+  background-color: #ff3f33;
 }
 
 #chat-area-heading {
@@ -286,7 +301,11 @@ footer a {
 }
 
 .message-file {
-  border-left: 2px solid var(--accent);
+  border-left: 4px solid #f2f2f2;
+  background-color: var(--bg);
+  border-radius: 8px;
+  padding: 0.4rem;
+  margin: 0.1rem;
 }
 
 .message-file > a {
