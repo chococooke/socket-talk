@@ -9,11 +9,13 @@ const API = {
     return fetch(`${baseUrl}${path}`, {
       headers: { Authorization: `Bearer ${getToken()}` },
     }).then((res) => {
-      if (res.status !== 200) {
-        console.log(res);
-      } else {
-        return res.json();
-      }
+      // if (res.status !== 200) {
+      //   console.log(res);
+      // } else {
+      //   return res.json();
+      // }
+
+      return res.json();
     });
   },
   async post(path, body) {
@@ -25,11 +27,7 @@ const API = {
       },
       body: JSON.stringify(body),
     }).then((res) => {
-      if (res.status !== 200) {
-        console.log(res);
-      } else {
-        return res.json();
-      }
+      return res.json();
     });
   },
 };

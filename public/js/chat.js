@@ -41,7 +41,7 @@ export function joinSocketRoom(groupId) {
 }
 
 socket.on("receive-message", (msg) => {
-  appendMessage(msg);
+  appendMessage(msg, state.selectedGroup);
 });
 
 document.getElementById("chat-form").onsubmit = async (event) => {

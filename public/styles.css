@@ -133,6 +133,31 @@ footer a {
   border-radius: 50%;
 }
 
+.grp-details{
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+.grp-details > span{
+  margin-bottom: 0.2rem;
+}
+
+.grp-details > span > i:first-child{
+  margin: 0.3rem ;
+}
+.grp-details > span:nth-child(2) > span{
+  color: var(--accent);
+  margin-right: 0.2rem;
+}
+
+.grp-last-message{
+  font-size: 12px;
+  opacity: 0.7;
+}
+
 .group-item > span {
   width: 80%;
   text-align: left;
@@ -293,6 +318,15 @@ footer a {
   width: fit-content;
   word-wrap: break-word;
   font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.message > p{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .message-link {
@@ -306,6 +340,14 @@ footer a {
   border-radius: 8px;
   padding: 0.4rem;
   margin: 0.1rem;
+}
+
+.message-timestamp{
+  font-size: 12px;
+  margin-top: 0.5rem;
+  opacity: 0.6;
+  align-self: flex-end;
+  width: 100%;
 }
 
 .message-file > a {
@@ -325,6 +367,12 @@ footer a {
   border-top-right-radius: 0;
 }
 
+.sent > p > small{
+  width: 100%;
+  text-align: right;
+  color: var(--card);
+}
+
 .sent > strong {
   display: none;
 }
@@ -332,6 +380,10 @@ footer a {
 .received {
   align-self: flex-start;
   border-top-left-radius: 0;
+}
+
+.received> p{
+  align-items: flex-start;
 }
 
 .chat-form {

@@ -3,14 +3,43 @@ import API from "./api.js";
 import { joinSocketRoom } from "./chat.js";
 
 export function renderGroupsList(groups) {
+  console.log(state);
+
   const list = document.getElementById("groupList");
   const messageList = document.getElementById("messageList");
   list.innerHTML = "";
 
   groups.forEach((group) => {
+    const currentMessages = group.Messages;
+
+    const lastMessage =
+      currentMessages.length > 0
+        ? group.Messages[group.Messages.length - 1]
+        : {text: "", User: {username: ""}};
+
+    if (lastMessage.text.startsWith("<img ")) {
+      lastMessage.text = `<i class="fa-solid fa-image"></i> Photo`;
+    }
+
+    if(lastMessage.text.includes("class='message-file'")){
+      lastMessage.text = `<i class="fas fa-paperclip"></i> File`
+    }
+
+    if(lastMessage.text.includes('.gif') && lastMessage.text.includes('<img')){
+      lastMessage.text = `<i class="fa-solid fa-image"></i> GIF`
+    }
+
+    const lastMessageString = `<span>${lastMessage.User.username}:</span><i class="fa-solid fa-check"></i> ${lastMessage.text}`;
+    console.log(lastMessageString);
+
     const grpSettings = document.getElementById("grp-settings");
     const item = document.createElement("div");
-    item.innerHTML = `<i class="fa-solid fa-users"></i> <span>${group.name}</span>`;
+    item.innerHTML = `<i class="fa-solid fa-users">
+    </i>
+    <div class='grp-details'>
+      <span class='grp-title'>${group.name}</span>
+      <span class='grp-last-message'>${lastMessageString}</span>
+    </div>`;
     item.className = "group-item";
     item.onclick = async () => {
       grpSettings.style.display = "none";
@@ -135,7 +164,6 @@ function renderGroupMemberSettings(members) {
   );
 
   const isAdmin = currentUser[0].UserGroup.isAdmin;
-  // if (!isAdmin) return;
 
   membersList.innerHTML = "";
 
@@ -233,13 +261,25 @@ export function renderMessages(messages) {
     } else {
       div.classList.add("received");
     }
-    div.innerHTML = `<strong>${msg.User.username}</strong> <p>${msg.text}<p>`;
+
+    const msgTimestamp = new Date(msg.createdAt)
+      .toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
+      .toUpperCase();
+
+    div.innerHTML = `<strong>${msg.User.username}</strong> <p>${msg.text}<p><small class="message-timestamp">${msgTimestamp}</small>`;
 
     container.appendChild(div);
   });
 }
 
-export function appendMessage(msg) {
+export function appendMessage(msg, group) {
+  console.log(group);
+  const lastMessage = group.Messages[group.Messages.length -1];
+  const lastMessageId = lastMessage ? lastMessage.id : 0;
   const container = document.getElementById("messageList");
   const div = document.createElement("div");
   div.className = "message";
@@ -249,7 +289,15 @@ export function appendMessage(msg) {
     div.classList.add("sent");
   }
 
-  div.innerHTML = `<strong>${msg.username}</strong> <p>${msg.text}<p>`;
+  const msgTimestamp = new Date(msg.createdAt)
+    .toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .toUpperCase();
+
+  div.innerHTML = `<strong>${msg.username}</strong> <p>${msg.text}<p><small class="message-timestamp">${msgTimestamp}</small>`;
 
   container.appendChild(div);
 
@@ -257,6 +305,18 @@ export function appendMessage(msg) {
     top: container.scrollHeight,
     behavior: "smooth",
   });
+
+  const stateMessageUpdate = {
+    id: lastMessageId + 1,
+    text: msg.text,
+    createdAt: msg.createdAt,
+    User: {
+      username: msg.username,
+    },
+  };
+
+  group.Messages.push(stateMessageUpdate);
+  renderGroupsList(state.groups);
 }
 
 export function renderOnlineUsers(onlineUsers) {
@@ -298,6 +358,8 @@ createGrpForm.addEventListener("submit", async (e) => {
   const members = state.grpSelectedUsers;
 
   const groupRes = await API.post("/groups", { name: grpName });
+
+  console.log(groupRes);
 
   if (members.length !== 0) {
     await API.post(`/groups/${groupRes.group.id}/add-members`, { members });
