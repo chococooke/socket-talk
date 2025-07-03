@@ -14,7 +14,7 @@ if (!initAuth()) {
   showCriticalAlert("Session Ended! Please Log in.", `${state.baseUrl}/login.html`, "Okay");
 }
 
-const socket = io("http://localhost:5000");
+const socket = io(state.baseUrl);
 setState({ socket });
 
 socket.emit("user-online", {

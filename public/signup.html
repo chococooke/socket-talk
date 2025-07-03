@@ -86,7 +86,7 @@
     </div>
   </body>
   <script>
-    const baseUrl = `http://localhost:5000`;
+    const baseUrl = window.location.origin.includes('localhost') ? 'http://localhost:8080' : "";
     const form = document.getElementById("form");
     form.addEventListener("submit", async (e) => {
       e.preventDefault();

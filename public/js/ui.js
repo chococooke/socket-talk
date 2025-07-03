@@ -3,7 +3,6 @@ import API from "./api.js";
 import { joinSocketRoom } from "./chat.js";
 
 export function renderGroupsList(groups) {
-  console.log(state);
 
   const list = document.getElementById("groupList");
   const messageList = document.getElementById("messageList");
@@ -30,7 +29,6 @@ export function renderGroupsList(groups) {
     }
 
     const lastMessageString = `<span>${lastMessage.User.username}:</span><i class="fa-solid fa-check"></i> ${lastMessage.text}`;
-    console.log(lastMessageString);
 
     const grpSettings = document.getElementById("grp-settings");
     const item = document.createElement("div");
@@ -277,7 +275,6 @@ export function renderMessages(messages) {
 }
 
 export function appendMessage(msg, group) {
-  console.log(group);
   const lastMessage = group.Messages[group.Messages.length -1];
   const lastMessageId = lastMessage ? lastMessage.id : 0;
   const container = document.getElementById("messageList");
@@ -358,8 +355,6 @@ createGrpForm.addEventListener("submit", async (e) => {
   const members = state.grpSelectedUsers;
 
   const groupRes = await API.post("/groups", { name: grpName });
-
-  console.log(groupRes);
 
   if (members.length !== 0) {
     await API.post(`/groups/${groupRes.group.id}/add-members`, { members });

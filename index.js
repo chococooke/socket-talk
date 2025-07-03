@@ -63,5 +63,5 @@ app.use("/", userRoutes);
 app.use("/", uploadRoutes);
 
 server.listen(PORT, () => {
-  console.log("Server is running on port 5000");
+  console.log(`Server listening on port ${PORT}`);
 });

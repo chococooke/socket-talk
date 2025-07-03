@@ -1,7 +1,9 @@
+import {BASE_URL} from "./config.js";
+
 export const state = {
   users: [],
   grpSelectedUsers: [],
-  baseUrl: `http://localhost:5000`,
+  baseUrl: BASE_URL,
   currentUser: null,
   token: null,
   groups: [],
