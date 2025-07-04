@@ -62,6 +62,8 @@ app.use("/", messageRoutes);
 app.use("/", userRoutes);
 app.use("/", uploadRoutes);
 
+app.get("/", (req, res) => res.sendFile(__dirname + '/public/login.html'));
+
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>SocketTalk</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="/styles.css" />
@@ -16,7 +16,10 @@
     <div class="main">
       <!-- Left sidebar-->
       <div class="container">
-        <h1 class="brand">SocketTalk</h1>
+        <h1 class="brand">
+          SocketTalk
+          <button id="theme-toggle"><i class="fas fa-moon"></i></button>
+        </h1>
         <button id="create-grp-btn">
           <i class="fa-solid fa-user-plus"></i> Create Group
         </button>
@@ -29,14 +32,11 @@
               placeholder="Group name"
             />
             <ul id="create-grp-select-members"></ul>
-            <!-- <div class="create-grp-form-actions"> -->
             <button type="button" id="create-grp-btn-close">Cancel</button>
             <button type="submit">Create Group</button>
-            <!-- </div> -->
           </form>
         </div>
         <div id="groupList"></div>
-
         <footer>
           Made with <i class="fas fa-heart" style="color: red"></i> by
           <a href="https://github.com/chococooke">chococooke</a>
@@ -45,7 +45,15 @@
 
       <!-- chat area -->
       <div class="container chat-area">
-        <h1 id="chat-area-heading"></h1>
+        <div id="chat-area-heading">
+          <h1>Chat</h1>
+          <div>
+            <button><i class="fa-solid fa-gear"></i></button>
+            <button class="chat-close-btn">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
         <div id="grp-settings" style="display: none">
           <div>
             <button id="grp-settings-close">
@@ -91,6 +99,7 @@
         </div>
       </form>
     </div>
+    <script type="module" src="/js/chat.js"></script>
+    <script type="module" src="/js/theme.js"></script>
   </body>
-  <script type="module" src="/js/chat.js"></script>
 </html>

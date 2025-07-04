@@ -3,114 +3,238 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <title>Login</title>
     <style>
-      * {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-      }
-      body {
-        background-color: #1e1e1e;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-      }
-      .main {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 96%;
-        height: 96%;
-        background-color: #121212;
-        border-radius: 10px;
+      :root {
+        --bg-dark: #121212;
+        --card-bg: #1e1e1e;
+        --text-light: #f2f2f2;
+        --input-bg: #2a2a2a;
+        --accent: #5f9df7;
+        --error: #ff4c4c;
+        --radius: 10px;
+        --transition: 0.3s ease;
       }
 
-      form {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 30%;
-        /* height: 50%; */
-        background-color: #444;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+      }
+
+      .main {
         display: flex;
-        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        justify-content: space-between;
-        border-radius: 10px;
+        height: 100%;
         padding: 1rem;
       }
 
-      form > input,
-      form > button {
+      form {
         width: 100%;
-        border-radius: 8px;
+        max-width: 400px;
+        background-color: var(--card-bg);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        animation: fadeIn 0.3s ease;
+      }
+
+      form h2 {
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+
+      input {
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius);
         border: none;
-        background-color: #f2f2f2;
-        margin: 0.4rem;
-        padding: 0.6rem;
-        /* height: 2rem; */
-        font-size: 20px;
+        background-color: var(--input-bg);
+        color: var(--text-light);
+        font-size: 1rem;
+        transition: border 0.3s;
       }
 
-      form > h2{
-        font-weight: bolder;
-        color: #f2f2f2;
+      input::placeholder {
+        color: #aaa;
       }
 
-      form > button {
-        background-color: #5f9df7;
+      input:focus {
+        outline: 2px solid var(--accent);
+      }
+
+      button {
+        padding: 0.75rem;
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        border-radius: var(--radius);
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color var(--transition), transform var(--transition);
+      }
+
+      button:hover {
+        background-color: #4b84e0;
+        transform: translateY(-1px);
+      }
+
+      small {
+        text-align: center;
+        color: #bbb;
+        font-size: 0.9rem;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .error-msg {
+        color: var(--error);
+        text-align: center;
+        font-size: 0.9rem;
+        display: none;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.98); }
+        to   { opacity: 1; transform: scale(1); }
+      }
+
+      /* Responsive tweaks */
+      @media (max-width: 768px) {
+        form {
+          padding: 1.5rem;
+        }
+
+        form h2 {
+          font-size: 1.5rem;
+        }
+
+        input, button {
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        form {
+          padding: 1rem;
+        }
+
+        input, button {
+          font-size: 0.95rem;
+          padding: 0.6rem 0.8rem;
+        }
+
+        small {
+          font-size: 0.8rem;
+        }
       }
     </style>
   </head>
   <body>
     <div class="main">
       <form id="form">
-        <h2>Create New account</h2>
+        <h2>Create New Account</h2>
         <input
           type="text"
           name="username"
           id="username"
-          placeholder="username"
+          placeholder="Username"
+          required
         />
-        <input type="text" name="email" id="email" placeholder="email" />
+        <input
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Email"
+          required
+        />
         <input
           type="password"
           name="password"
           id="password"
           placeholder="Password"
+          required
         />
+        <div class="error-msg" id="error-msg">Error: Please fill all fields correctly.</div>
         <button type="submit">Sign Up</button>
+        <small>
+          Already have an account?
+          <a id="login-cta" href="#">Login here</a>.
+        </small>
       </form>
     </div>
-  </body>
-  <script>
-    const baseUrl = window.location.origin.includes('localhost') ? 'http://localhost:8080' : "";
-    const form = document.getElementById("form");
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const username = document.getElementById("username").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
 
-      const res = await axios.post(`${baseUrl}/signup`, {
-        username,
-        email,
-        password,
+    <script>
+      const baseUrl = window.location.origin.includes("localhost")
+        ? "http://localhost:8080"
+        : "";
+
+      document.getElementById("login-cta").href = `${baseUrl}/login.html`;
+
+      const form = document.getElementById("form");
+      const errorBox = document.getElementById("error-msg");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!username || !email || !password) {
+          errorBox.textContent = "Please fill all fields correctly.";
+          errorBox.style.display = "block";
+          return;
+        }
+
+        errorBox.style.display = "none";
+
+        try {
+          const res = await axios.post(`${baseUrl}/signup`, {
+            username,
+            email,
+            password,
+          });
+
+          const data = res.data;
+
+          if (!data.success) {
+            errorBox.textContent = "Signup failed. Try again.";
+            errorBox.style.display = "block";
+            return;
+          }
+
+          alert("Signup successful. Redirecting...");
+          window.location.href = `${baseUrl}/login.html`;
+        } catch (err) {
+          console.error(err);
+          errorBox.textContent = "Something went wrong. Please try again.";
+          errorBox.style.display = "block";
+        }
       });
-
-      const data = res.data;
-
-      alert(data.success);
-
-      if (!data.success) {
-        alert("Signup failed");
-        return;
-      }
-
-      alert("Signup successful. Redirecting...");
-      window.location.href = `${baseUrl}/login.html`;
-    });
-  </script>
+    </script>
+  </body>
 </html>

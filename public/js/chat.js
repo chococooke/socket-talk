@@ -41,6 +41,9 @@ export function joinSocketRoom(groupId) {
 }
 
 socket.on("receive-message", (msg) => {
+  if(msg.groupId !== state.selectedGroup.id){
+    return;
+  }
   appendMessage(msg, state.selectedGroup);
 });
 
@@ -51,8 +54,6 @@ document.getElementById("chat-form").onsubmit = async (event) => {
 
   if (!text || !state.selectedGroup) return;
 
-  await API.post(`/groups/${state.selectedGroup.id}/messages`, { text });
-
   socket.emit("send-message", {
     groupId: state.selectedGroup.id,
     message: {
@@ -62,6 +63,7 @@ document.getElementById("chat-form").onsubmit = async (event) => {
     },
   });
 
+  await API.post(`/groups/${state.selectedGroup.id}/messages`, { text });
   input.value = "";
 };
 

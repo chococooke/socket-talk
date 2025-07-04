@@ -3,7 +3,6 @@ import API from "./api.js";
 import { joinSocketRoom } from "./chat.js";
 
 export function renderGroupsList(groups) {
-
   const list = document.getElementById("groupList");
   const messageList = document.getElementById("messageList");
   list.innerHTML = "";
@@ -11,29 +10,40 @@ export function renderGroupsList(groups) {
   groups.forEach((group) => {
     const currentMessages = group.Messages;
 
-    const lastMessage =
-      currentMessages.length > 0
-        ? group.Messages[group.Messages.length - 1]
-        : {text: "", User: {username: ""}};
+    // const lastMessage =
+    //   currentMessages.length > 0
+    //     ? group.Messages[group.Messages.length - 1]
+    //     : {text: "", User: {username: ""}};
 
-    if (lastMessage.text.startsWith("<img ")) {
-      lastMessage.text = `<i class="fa-solid fa-image"></i> Photo`;
+    let lastMessage = "";
+    let lastMessageString = "";
+
+    if (currentMessages.length > 0) {
+      lastMessage = group.Messages[group.Messages.length - 1];
+      if (lastMessage.text.startsWith("<img ")) {
+        lastMessage.text = `<i class="fa-solid fa-image"></i> Photo`;
+      }
+
+      if (lastMessage.text.includes("class='message-file'")) {
+        lastMessage.text = `<i class="fas fa-paperclip"></i> File`;
+      }
+
+      if (
+        lastMessage.text.includes(".gif") &&
+        lastMessage.text.includes("<img")
+      ) {
+        lastMessage.text = `<i class="fa-solid fa-image"></i> GIF`;
+      }
+      lastMessage.text = lastMessage.text.length > 32 ? lastMessage.text.substring(0, 24) + "..." : lastMessage.text
+      lastMessageString = `<span>${lastMessage.User.username}:</span><i class="fa-solid fa-check"></i> ${lastMessage.text}`;
+    } else {
+      lastMessage = "";
+      lastMessageString = "🚫 <em> Empty chat!<em>";
     }
-
-    if(lastMessage.text.includes("class='message-file'")){
-      lastMessage.text = `<i class="fas fa-paperclip"></i> File`
-    }
-
-    if(lastMessage.text.includes('.gif') && lastMessage.text.includes('<img')){
-      lastMessage.text = `<i class="fa-solid fa-image"></i> GIF`
-    }
-
-    const lastMessageString = `<span>${lastMessage.User.username}:</span><i class="fa-solid fa-check"></i> ${lastMessage.text}`;
 
     const grpSettings = document.getElementById("grp-settings");
     const item = document.createElement("div");
-    item.innerHTML = `<i class="fa-solid fa-users">
-    </i>
+    item.innerHTML = `
     <div class='grp-details'>
       <span class='grp-title'>${group.name}</span>
       <span class='grp-last-message'>${lastMessageString}</span>
@@ -275,7 +285,7 @@ export function renderMessages(messages) {
 }
 
 export function appendMessage(msg, group) {
-  const lastMessage = group.Messages[group.Messages.length -1];
+  const lastMessage = group.Messages[group.Messages.length - 1];
   const lastMessageId = lastMessage ? lastMessage.id : 0;
   const container = document.getElementById("messageList");
   const div = document.createElement("div");

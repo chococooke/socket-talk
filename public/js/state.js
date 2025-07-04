@@ -10,6 +10,7 @@ export const state = {
   selectedGroup: null,
   message: [],
   socket: null,
+  theme: 'light'
 };
 
 export function setState(partial) {
