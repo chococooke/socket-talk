@@ -20,8 +20,14 @@ module.exports = (sequelize, DataTypes) => {
   }
   Group.init(
     {
-      name: DataTypes.STRING,
-      createdByUserId: DataTypes.INTEGER,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      createdByUserId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       sequelize,

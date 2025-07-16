@@ -1,1 +1,1 @@
-export const BASE_URL = window.location.origin.includes('localhost') ? `http://localhost:8080` : ``
+export const BASE_URL = window.location.origin.includes('localhost') ? `http://localhost:5000` : ``

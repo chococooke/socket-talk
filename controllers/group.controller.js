@@ -5,6 +5,10 @@ module.exports.createGroup = async (req, res) => {
   const userId = req.user.id;
   const { name } = req.body;
 
+  if (!name || typeof name !== "string") {
+    return res.status(400).send("Invalid input");
+  }
+
   try {
     const group = await Group.create({
       name,
@@ -31,6 +35,14 @@ module.exports.addMembers = async (req, res) => {
   const groupId = parseInt(req.params.id, 10);
   const currentUserId = req.user.id;
   const { members } = req.body;
+
+  if (members.length === 0) {
+    return res.status(400).json({ error: "Cannot add 0 group members" });
+  }
+
+  if (!Array.isArray(members)) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
 
   try {
     const isAdmin = await UserGroup.findOne({
@@ -88,7 +100,7 @@ module.exports.getUserGroups = async (req, res) => {
         id: {
           [Sequelize.Op.in]: (
             await UserGroup.findAll({
-              where: { userId: req.user.id },
+              where: { userId },
               attributes: ["groupId"],
             })
           ).map((link) => link.groupId),

@@ -34,7 +34,10 @@ export function renderGroupsList(groups) {
       ) {
         lastMessage.text = `<i class="fa-solid fa-image"></i> GIF`;
       }
-      lastMessage.text = lastMessage.text.length > 32 ? lastMessage.text.substring(0, 24) + "..." : lastMessage.text
+      lastMessage.text =
+        lastMessage.text.length > 32
+          ? lastMessage.text.substring(0, 24) + "..."
+          : lastMessage.text;
       lastMessageString = `<span>${lastMessage.User.username}:</span><i class="fa-solid fa-check"></i> ${lastMessage.text}`;
     } else {
       lastMessage = "";
@@ -364,6 +367,10 @@ createGrpForm.addEventListener("submit", async (e) => {
   const grpName = createGrpInput.value.trim();
   const members = state.grpSelectedUsers;
 
+  if (typeof grpName !== "string" || grpName === "") {
+    window.alert("Group name cannot be empty.");
+    return;
+  }
   const groupRes = await API.post("/groups", { name: grpName });
 
   if (members.length !== 0) {

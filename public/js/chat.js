@@ -11,7 +11,11 @@ import API from "./api.js";
 import { initAuth, logOut } from "./auth.js";
 
 if (!initAuth()) {
-  showCriticalAlert("Session Ended! Please Log in.", `${state.baseUrl}/login.html`, "Okay");
+  showCriticalAlert(
+    "Session Ended! Please Log in.",
+    `${state.baseUrl}/login.html`,
+    "Okay"
+  );
 }
 
 const socket = io(state.baseUrl);
@@ -41,7 +45,7 @@ export function joinSocketRoom(groupId) {
 }
 
 socket.on("receive-message", (msg) => {
-  if(msg.groupId !== state.selectedGroup.id){
+  if (msg.groupId !== state.selectedGroup.id) {
     return;
   }
   appendMessage(msg, state.selectedGroup);
@@ -52,7 +56,15 @@ document.getElementById("chat-form").onsubmit = async (event) => {
   const input = document.getElementById("messageInput");
   const text = input.value.trim();
 
-  if (!text || !state.selectedGroup) return;
+  if (text === "" || typeof text !== "string") {
+    window.alert("Message cannot be empty");
+    return;
+  }
+
+  if (!state.selectedGroup) {
+    window.alert("Please select a group");
+    return;
+  }
 
   socket.emit("send-message", {
     groupId: state.selectedGroup.id,

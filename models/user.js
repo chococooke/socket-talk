@@ -13,16 +13,25 @@ module.exports = (sequelize, DataTypes) => {
         through: models.UserGroup,
         foreignKey: "userId",
         otherKey: "groupId",
-        as: "memberGroups"
+        as: "memberGroups",
       });
       User.hasMany(models.Message);
     }
   }
   User.init(
     {
-      username: DataTypes.STRING,
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {
       sequelize,

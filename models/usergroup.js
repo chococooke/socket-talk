@@ -15,9 +15,13 @@ module.exports = (sequelize, DataTypes) => {
   }
   UserGroup.init(
     {
-      userId: DataTypes.INTEGER,
-      groupId: DataTypes.INTEGER,
-      isAdmin: DataTypes.BOOLEAN,
+      userId: { type: DataTypes.INTEGER, allowNull: false },
+      groupId: { type: DataTypes.INTEGER, allowNull: false },
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
       sequelize,

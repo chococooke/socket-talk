@@ -5,6 +5,10 @@ module.exports.sendMessage = async (req, res) => {
   const userId = req.user.id;
   const { text } = req.body;
 
+  if (!text || typeof text !== "string") {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
   try {
     const message = await Message.create({
       text,

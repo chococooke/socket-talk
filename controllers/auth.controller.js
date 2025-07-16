@@ -1,12 +1,19 @@
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const joi = require("joi");
 require("dotenv").config();
 
 const SECRET = process.env.JWT_SECRET;
 
 module.exports.signup = async (req, res) => {
   try {
+    Object.values(req.body).forEach((value) => {
+      if (typeof value !== "string" || value === "") {
+        return res.status(400).json({ error: "Invalid input" });
+      }
+    });
+
     const { username, email, password } = req.body;
 
     const hashed = await bcrypt.hash(password, 10);
@@ -25,6 +32,11 @@ module.exports.signup = async (req, res) => {
 
 module.exports.login = async (req, res) => {
   try {
+    Object.values(req.body).forEach((value) => {
+      if (typeof value !== "string" || value === "") {
+        return res.status(400).json({ error: "Invalid input" });
+      }
+    });
     const { email, password } = req.body;
     const user = await User.findOne({ where: { email } });
 
@@ -41,7 +53,7 @@ module.exports.login = async (req, res) => {
         email,
       },
       SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
 
     res.json({ token });
